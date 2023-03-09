@@ -1,6 +1,7 @@
 # Trying to make a basic tokenizer in BQN.
-
+# =================================================================================
 # Here is BQN tokenizer function from BQN compiler by Marshall Lochbaum (9/3/2023).
+# =================================================================================
 
 
 
