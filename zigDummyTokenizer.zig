@@ -86,6 +86,48 @@ fn skip_whitespace(lex: *Lexer) void {
     }
     lex.buf = lex.buf[i..];
 }
+fn expect(lex: *Lexer, kind: TokenKind) !Token {
+    const token = try lex.eat();
+    if (token.kind == kind) return token;
+    return error.UnexpectedToken;
+}
+//===========================================================
+const std = @import("std");
+var out = std.ArrayList(u8).init(std.heap.page_allocator);
+try out.appendSlice(
+  \\pub fn main() !void {
+  \\    var result: i64 = 0;
+  \\
+);
+
+const input = "10 + 4 - 1 + 7";
+var lex = Lexer {
+    .buf = input,
+};
+
+const initial = try lex.expect(.number);
+try out.writer().print("    result = {s};\n", .{ initial.str });
+
+while (true) {
+    const operator = lex.eat() catch |e| switch (e) {
+        error.EOF => break,
+        else => return e,
+    };
+    const value = try lex.expect(.number);
+    
+    try out.writer().print("    result = result {s} {s};\n", .{ operator.str, value.str });
+}
+
+try out.appendSlice(
+    \\
+    \\     @import("std").io.getStdOut().writer().print("{}\n", .{ result });
+    \\
+);
+try out.appendSlice("}");
+
+const zig_string = try out.toOwnedSlice();
+std.debug.print("{s}\n", .{ zig_string });
+
 //=============================================================================
 const std = @import("../std.zig");
 
