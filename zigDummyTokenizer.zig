@@ -1,5 +1,92 @@
 // A very simple attempt to toklenize only (numbers,+ and _) based on the zig tokenizer.
 
+fn eat(lex: *Lexer) !Token {
+    lex.skip_whitespace();
+    if (lex.buf.len == 0) return error.EOF;
+    switch (lex.buf[0]) {
+        '0'...'9' => return lex.eat_number(),
+        '+' => return lex.eat_char_as_token(1, .plus),
+        '-' => return lex.eat_char_as_token(1, .minus),
+        else => return error.UnexpectedByte,
+    }
+}
+
+const TokenKind = enum {
+    none,
+    plus,
+    minus,
+    number,
+};
+const Token = struct {
+    kind: TokenKind,
+    str: []const u8,
+    location: Loc,
+};
+const Loc = struct {
+    line: u32,
+    column: u32,
+    length: u16,
+};
+const Lexer = struct {
+    buf: []const u8,
+    current_location: Loc = .{ .line = 1, .column = 1, .length = 1 },
+};
+ 
+fn eat_char_as_token(lex: *Lexer, num_bytes: usize, kind: TokenKind) !Token {
+    if (lex.buf.len < num_bytes) return error.EOF;
+    
+    var loc = lex.current_location;
+    const str = lex.buf[0..num_bytes];
+    loc.length = @intCast(u16, num_bytes);
+    lex.buf = lex.buf[str.len..];
+    lex.current_location.column += str.len;
+    return Token {
+        .kind = kind,
+        .str = str,
+        .loc = loc,
+    };
+}
+
+fn eat_number(lex: *Lexer) !Token {
+    var loc = lex.current_location;
+
+    var i: usize = 0;
+    while (i < lex.buf.len) : (i += 1) {
+        switch (lex.buf[i]) {
+            '0'...'9' => continue,
+            else => break,
+        }
+    }
+    if (i == 0) return error.BadNumber;
+
+    const str = lex.buf[0..i];
+    loc.length = @intCast(u16, str.len);
+    lex.buf = lex.buf[i..];
+    lex.current_location.column += str.len;
+    return Token {
+        .kind = .number,
+        .str = str,
+        .location = loc,
+    };
+}
+
+fn skip_whitespace(lex: *Lexer) void {
+    if (lex.buf.len == 0) return;
+
+    var i: usize = 0;
+    while (i < lex.buf.len) : (i += 1) {
+        switch (lex.buf.ptr[i]) {
+            ' ', '\t' => lex.current_location.column += 1,
+            '\n' => {
+                lex.current_location.line += 1;
+                lex.current_location.column = 1;
+            },
+            else => break,
+        }
+    }
+    lex.buf = lex.buf[i..];
+}
+//=============================================================================
 const std = @import("../std.zig");
 
 pub const Token = struct {
@@ -24,7 +111,7 @@ pub const Token = struct {
             
         
     
-      
+//===========================================================================
 
 
 // The official complete Zig tokenizer from Zig source files (9/3/2023)
