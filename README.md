@@ -8,6 +8,21 @@ A simple example of a calculator programming language, that compiles to native c
 
 https://gist.github.com/Tetralux/233e15eb17e687971ca1ed0fa5639758 Thank you @Tetralux
 
+language-comparaison by code report
+
+https://github.com/codereport/array-language-comparisons
+
+The Nial doc
+
+https://www.nial-array-language.org/ndocs/
+
+Marshall Lochbaume repositories with his creation like BQN and the Ilanguage. Many usefull informations and reflexion about array programming.
+
+https://mlochbaum.github.io/
+
+
+
+
 
 
 Language features
@@ -19,7 +34,7 @@ Array will be represented by values separated by _.
 slafer is left to right writing like the pipe operator.
 1_2_3/+ is 1+2+3
 
-| Symbol |   Mono    |   Dia     |
+| Symbol |   Mono    |   Dya     |
 | --- | --- | --- |
 | ~ | ------- | ------- |
 | ! | ------- | ------- |
