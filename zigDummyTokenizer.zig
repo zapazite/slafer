@@ -1,5 +1,9 @@
 // A very simple attempt to toklenize only (numbers,+ and _) based on the zig tokenizer.
 
+//=================================================================
+//                    Starting from scratch
+//=================================================================
+
 fn eat(lex: *Lexer) !Token {
     lex.skip_whitespace();
     if (lex.buf.len == 0) return error.EOF;
@@ -91,7 +95,9 @@ fn expect(lex: *Lexer, kind: TokenKind) !Token {
     if (token.kind == kind) return token;
     return error.UnexpectedToken;
 }
-//========================= Generate Zig source code instead of compiling everything from scrach ==================================
+//=======================================================================
+// Generate Zig source code instead with the lexer from scratch
+//=======================================================================
 const std = @import("std");
 var out = std.ArrayList(u8).init(std.heap.page_allocator);
 try out.appendSlice(
@@ -128,7 +134,9 @@ try out.appendSlice("}");
 const zig_string = try out.toOwnedSlice();
 std.debug.print("{s}\n", .{ zig_string });
 
-//=============================================================================
+//===========================================================================
+// Try to simplify zig tokenizer into something much simpler
+//===========================================================================
 const std = @import("../std.zig");
 
 pub const Token = struct {
