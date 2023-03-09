@@ -14,6 +14,8 @@ slafer is left to right writing like the pipe operator.
 |  @     | -------  |--------   |
 |  #     | shape    | reshape   |
 |  $     | comments |-----------|
+
+
 |  %     | -------  |-----------|
 |  ^     | -------  |-----------|
 |  &     | -------  |-----------|
