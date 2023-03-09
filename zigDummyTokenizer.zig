@@ -91,7 +91,7 @@ fn expect(lex: *Lexer, kind: TokenKind) !Token {
     if (token.kind == kind) return token;
     return error.UnexpectedToken;
 }
-//===========================================================
+//========================= Generate Zig source code instead of compiling everything from scrach ==================================
 const std = @import("std");
 var out = std.ArrayList(u8).init(std.heap.page_allocator);
 try out.appendSlice(
