@@ -8,7 +8,7 @@ A simple example of a calculator programming language, that compiles to native c
 
 https://gist.github.com/Tetralux/233e15eb17e687971ca1ed0fa5639758 Thank you @Tetralux
 
-language-comparaison by code report
+Language-comparaison by code report
 
 https://github.com/codereport/array-language-comparisons
 
