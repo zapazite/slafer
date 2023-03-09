@@ -2,9 +2,15 @@
 A dummy Array Language to learn and explore.
 
 
-Usefull link:
+Usefull links
+-------------
 A simple example of a calculator programming language, that compiles to native code!:
 https://gist.github.com/Tetralux/233e15eb17e687971ca1ed0fa5639758 Thank you @Tetralux
+
+
+
+Language features
+-----------------
 
 Array will be represented by values separated by _.
 1_2_3 is the array containing 1 2 and 3.
