@@ -16,7 +16,7 @@ The Nial doc
 
 https://www.nial-array-language.org/ndocs/
 
-Marshall Lochbaume repositories with his creation like BQN and the Ilanguage. Many usefull informations and reflexion about array programming.
+Marshall Lochbaume repositories with his creation like BQN and the Ilanguage. Many usefull informations and reflections about array programming.
 
 https://mlochbaum.github.io/
 
