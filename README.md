@@ -28,9 +28,9 @@ https://mlochbaum.github.io/
 Language features
 -----------------
 
-Array will be represented by values separated by _ so 1_2_3 is the array containing 1 2 and 3.
+Array will be represented by values separated by `_` so `1_2_3` is the array containing 1 2 and 3.
 
-slafer is `left to right` writing like the pipe operator so 1_2_3/+ is 1+2+3
+slafer is `left to right` writing like the pipe operator so `1_2_3/+` is 1+2+3
 
 | Symbol |   Mono    |   Dya     |
 | --- | --- | --- |
@@ -59,6 +59,6 @@ slafer is `left to right` writing like the pipe operator so 1_2_3/+ is 1+2+3
 | \ | ------- | ----------- |
 | ' | ------- | ----------- |
 | ; | ------- | ----------- |
-| / | ------- | ----------- |
+| / | ------- | reduce |
 | . | ------- | ----------- |
 | , | ------- | ----------- |
