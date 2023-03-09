@@ -154,9 +154,8 @@ pub const Token = struct {
         
     
 //===========================================================================
-
-
 // The official complete Zig tokenizer from Zig source files (9/3/2023)
+//===========================================================================
 
 const std = @import("../std.zig");
 
