@@ -1,15 +1,32 @@
 Tokenize←{System‿vars←𝕨
   # Resolve comments and strings
-  c←𝕩='#'⋄s←/0‿0⊸«⊸∧sm←𝕩='''⋄d←/dm←𝕩='"'
-  g←⍋q←∾⟨  s⋄¯1↓d⋄/c⟩ ⋄q↩g⊏q                # Open indices
-  e← g⊏∾⟨2+s⋄ 1↓d⋄-⟜»∘⊏⟜(0∾+`c)⊸//(𝕩∊lf)∾1⟩ # Matching close indices
+  c←𝕩='#'
+#   𝕩≡"hello world # this is a comment"
+#    c←0000000000001000000000000000000
+
+# s for (s)ingle quote, sm for single quote mask
+  s←/sm∧0‿0«sm←𝕩=⊑"'"
+#INPUT::: 𝕩≡"hello world" + 'a' + 'invalid'  '''
+#   0‿0⊸«sm←0000000000000010100010000000100111
+#        sm∧0000000000001010001000000010011100
+#          /0000000000000010000000000000000100
+#         s←⟨14⟩
+
+# d for (d)ubbled quote, dm for dubble quote mask
+  d←/dm←𝕩='"'
+
+  # Open indices
+  g←⍋q←∾⟨s⋄¯1↓d⋄/c⟩
+  q↩g⊏q
+
+  e← g⊏∾⟨2+s⋄  1↓d⋄-⟜»∘⊏⟜(0∾+`c)⊸//(𝕩∊lf)∾1⟩ # Matching close indices
   Se←≠(>/⊢)∾⟜≠{(⊏˜𝕨)𝕊⍟(≠○(¯1⊸⊑))𝕩∾𝕩⊏𝕨}⟨0⟩˙  # Find reachable openings
   St←(≠𝕩)↑·/⁼(Se q⍋e)⊸⊏                     # All indices → reached mask
-  a←St q⋄b←St e⋄f←1≠`ab←a∨b                 # Open/close masks; filter
+  a‿b←St¨q‿e ⋄ f←1≠`ab←a∨b                 # Open/close masks; filter
   {!⟨⊑/𝕩,"Unclosed quote"⟩}⍟(∨´)(sm∨dm)∧b<f
 
   # Extract character and string literals
-  u←f∧𝕩='@'⋄ci←/u∨»a∧sm
+  u←f∧𝕩='@' ⋄ ci←/u∨»a∧sm
   chr←(⊏⟜𝕩-('@'-@)×⊏⟜u)ci                   # Characters (indices ci)
   f>↩qe←dm∧«a∧↩dm                           # Quote Escape ""
   str←𝕩⊔˜1-˜(si←a>»qe)(⊣+`⊸×○(∾⟜1)<)≠`dm∧ab # Strings (indices /si)
