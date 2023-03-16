@@ -3,9 +3,23 @@
 # Eventually, we will write a converter from byte code to IR
 
 
-func‿mod1‿mod2 ← ⟨'+','-'⟩‿⟨'¨','´'⟩‿⟨'∘','⊸'⟩
+# Replace each instance of a string in old with the corresponding
+# string in new.
+# Instances are non-overlapping, and earlier ones take precedence.
+ReplaceAll ← { ⟨old,new⟩ 𝕊 str:
+  ! (≠new) ≡ l ← ≠old
+  "ReplaceAll: Can't replace empty" ! ∧´0<≠¨old
+  match ← 1-˜ (l+1)|⌊´ (↕⊸-l) × old (1<≠∘⊣)◶⟨⊑⊸=,≠∘⊢↑⍷⟩¨ <str
+  cont ← (-⟜1⌈≤⟜1×⊢)` match ⊏ (≠¨old)∾0
+  keep ← ⋈⟜(⊏⟜str) / 0=cont
+  insert ← (new⊏˜⊏⟜match)⊸(≠¨⊸/⋈∾∘⊣) / (0⊸<∧»⊸≤) cont
+  ⍋⊸⊏´ keep ∾¨ insert
+}
 
-na←¯1⊑≢alph←("aA"+⌜↕26)∾˘"àÀ"+⌜(↕23)∾24+↕7
+
+func‿mod1‿mod2 ← ⟨'+','-'⟩‿⟨'¨','´'⟩‿⟨'∘','⊸'⟩
+na←¯1⊑≢alph←("aA"+⌜(↕24)∾25)∾˘("àÀ")+⌜ (↕23)∾24+↕7
+
 lf←@+10‿13
 charSet‿cgl←(∾ ⋈ ≠¨)⟨
   func                  # Function
@@ -50,7 +64,7 @@ PN←1(∾/∾˜)(∨/⊣)  # Partitioned-none: partitions where 𝕨<𝕩 is ne
 # Identifiers then literal tokens are numbered starting at vi
 Tokenize←{System‿vars←𝕨
   # Resolve comments and strings
-  c←𝕩='#'⋄s←/0‿0⊸«⊸∧sm←𝕩='''⋄d←/dm←𝕩='"'
+  c←𝕩='#'⋄s←/0‿0⊸«⊸∧sm←𝕩=⊑"'"⋄d←/dm←𝕩='"'
   g←⍋q←∾⟨  s⋄¯1↓d⋄/c⟩ ⋄q↩g⊏q                # Open indices
   e← g⊏∾⟨2+s⋄ 1↓d⋄-⟜»∘⊏⟜(0∾+`c)⊸//(𝕩∊lf)∾1⟩ # Matching close indices
   Se←≠(>/⊢)∾⟜≠{(⊏˜𝕨)𝕊⍟(≠○(¯1⊸⊑))𝕩∾𝕩⊏𝕨}⟨0⟩˙  # Find reachable openings
@@ -361,10 +375,12 @@ Parse ← {r‿vn‿i‿e‿def←𝕨⋄nv←≠vn
 
 Compile←{
   defaults←⟨⟩‿(!∘"System values not supported")‿⟨⟩‿(↕0)
-  prims‿Sys‿vars‿redef ← ∾⟜(≠↓defaults˙) ⋈⍟(4<≠)𝕨
+  prims‿Sys‿vars‿redef ←  ∾⟜(≠↓defaults˙) ⋈⍟(4<≠)𝕨
   ⟨tok,role,val,t0,t1⟩←tx←sys‿vars Tokenize 𝕩
   ⟨oc,prim,blk,bdy,oi⟩←⟨role,⊑val,t0,t1,redef»0¨vars⟩ Parse tok
   ⟨oc, ∾⟨prim⊏prims⟩∾1↓val, <˘⍉>blk, <˘⍉>bdy, oi, tx⟩
 }
 
-•Show ⟨•primitives, ⟨•Show⟩⟩Compile "•Show 1+1"
+primitives ← ⟨⟨'+',+⟩⟩
+
+•Show (⟨primitives, ⟨⟩, ⟨⟩⟩Compile "1+1" )≡⟨0‿1‿0‿0‿0‿1‿17‿7,⟨⟨'+',+⟩,1⟩,⟨0‿1‿0⟩,⟨⟨0,0,⟨⟩,⟨⟩⟩⟩,⟨2‿2‿1‿1‿0‿0‿1‿0,2‿2‿1‿1‿0‿0‿1‿0⟩,⟨37‿0‿37,0‿1‿0,⟨⟨⟩,⟨⟩,⟨1⟩,⟨⟩,⟨⟩⟩,0‿1‿2,0‿1‿2⟩⟩
